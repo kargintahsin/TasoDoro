@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TasoDoro.Views.MainPage"
+             BackgroundColor="#1c1c1e">
+
+    <Grid RowDefinitions="*, Auto, *" Padding="30">
+
+        <VerticalStackLayout Grid.Row="0" VerticalOptions="Center" Spacing="10">
+            <Label Text="POMODORO" 
+                   TextColor="#ff6347"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   CharacterSpacing="2"/>
+            <Label Text="Focus on your work" 
+                   TextColor="#9e9e9e"
+                   FontSize="16"
+                   HorizontalOptions="Center"/>
+
+        </VerticalStackLayout>
+
+        <VerticalStackLayout Grid.Row="1" Spacing="20" VerticalOptions="Center">
+
+            <Label Text="{Binding TimeDisplay}"
+                   FontSize="100"
+                   TextColor="White"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   FontFamily="OpenSansSemibold"/>
+
+            <ProgressBar Progress="{Binding ProgressValue}"
+                         ProgressColor="#ff6347"
+                         ScaleY="4"/>
+            <Label FontSize="16"
+                   TextColor="#9e9e9e"
+                   HorizontalOptions="Center"
+                   Margin="0, 10, 0, 0">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Tamamlanan Döngü: "/>
+                        <Span Text="{Binding PomodoroCount}" 
+                              FontAttributes="Bold" 
+                              TextColor="White"/>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+        </VerticalStackLayout>
+
+        <HorizontalStackLayout Grid.Row="2" 
+                               Spacing="20" 
+                               HorizontalOptions="Center" 
+                               VerticalOptions="End">
+
+            <Button Text="BAŞLAT"
+                    Command="{Binding StartCommand}"
+                    BackgroundColor="Green"
+                    TextColor="White"
+                    CornerRadius="25"
+                    HeightRequest="60"
+                    WidthRequest="140"
+                    FontAttributes="Bold"
+                    IsVisible="True">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding IsRunning}" Value="True">
+                        <Setter Property="IsVisible" Value="False"/>
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+
+            <Button Text="DURDUR"
+                    Command="{Binding StopCommand}"
+                    BackgroundColor="Red"
+                    TextColor="White"
+                    CornerRadius="25"
+                    HeightRequest="60"
+                    WidthRequest="140"
+                    FontAttributes="Bold"
+                    IsVisible="False">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding IsRunning}" Value="True">
+                        <Setter Property="IsVisible" Value="True"/>
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+
+            <Button Text="SIFIRLA"
+                    Command="{Binding ResetCommand}"
+                    BackgroundColor="Black"
+                    TextColor="White"
+                    BorderColor="#555"
+                    BorderWidth="1"
+                    CornerRadius="25"
+                    HeightRequest="60"
+                    WidthRequest="100"
+                    FontAttributes="Bold"/>
+        </HorizontalStackLayout>
+
+    </Grid>
+
+</ContentPage>
