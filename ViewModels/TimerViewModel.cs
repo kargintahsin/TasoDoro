@@ -80,6 +80,8 @@ namespace TasoDoro.ViewModels
         {
             Stop();
             _remainingSeconds = _totalSeconds;
+            //Eğer döngü sayısı da sıfırlanacaksa 
+            // pomodoroCount=0;
             UpdateDisplay();
         }
 
@@ -87,7 +89,7 @@ namespace TasoDoro.ViewModels
         private void UpdateDisplay()
         {
             TimeSpan time = TimeSpan.FromSeconds(_remainingSeconds);
-            TimeDisplay = time.ToString(@"mm\:ss");
+            TimeDisplay = time.ToString(@"mm\:h");
 
             // Progress bar 1'den geriye doğru azalacak
             ProgressValue = (double)_remainingSeconds / _totalSeconds;
