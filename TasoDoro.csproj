@@ -69,4 +69,16 @@
 	  <Folder Include="Models\" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Update="Views\SettingsPage.xaml.cs">
+	    <DependentUpon>SettingsPage.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Views\SettingsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
 </Project>

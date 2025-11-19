@@ -7,6 +7,7 @@ namespace TasoDoro.ViewModels
     public partial class TimerViewModel : ObservableObject
     {
         private readonly IDispatcherTimer _timer;
+        // TODO: Süre dışardan ayarlanabilir hale getirilecek
         private int _totalSeconds = 25*60; //25 * 60;
         private int _remainingSeconds;
         
@@ -52,6 +53,7 @@ namespace TasoDoro.ViewModels
             }
         }
 
+        // TODO: Start, Stop, Reset metodları async yapılabilir
         // Başlat Butonu için Komut
         [RelayCommand]
         private void Start()
@@ -89,7 +91,7 @@ namespace TasoDoro.ViewModels
         private void UpdateDisplay()
         {
             TimeSpan time = TimeSpan.FromSeconds(_remainingSeconds);
-            TimeDisplay = time.ToString(@"mm\:h");
+            TimeDisplay = time.ToString(@"mm\:ss");
 
             // Progress bar 1'den geriye doğru azalacak
             ProgressValue = (double)_remainingSeconds / _totalSeconds;
