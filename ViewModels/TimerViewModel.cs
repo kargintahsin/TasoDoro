@@ -168,9 +168,9 @@
 ﻿        {
 ﻿            if (_settings.IsClassicMode)
 ﻿            {
-﻿                _workDuration = 5; //test için kısaltıldı 25 * 60
-                _shortBreakDuration = 5;//test için kısaltıldı 5 * 60
-                _longBreakDuration = 15;//test için kısaltıldı 15 * 60
+﻿                _workDuration = 25 * 60;
+                _shortBreakDuration = 5 * 60;
+                _longBreakDuration = 15 * 60;
             }
 ﻿            else
 ﻿            {
