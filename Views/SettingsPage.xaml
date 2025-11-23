@@ -2,11 +2,58 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TasoDoro.Views.SettingsPage"
+             xmlns:viewmodel="clr-namespace:TasoDoro.ViewModels"
+             x:DataType="viewmodel:SettingsViewModel"
              Title="Ayarlar">
-    <VerticalStackLayout>
-        <Label 
-            Text="AYARLAR SAYFASI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout Spacing="15" Padding="20">
+
+            <!-- Mod Seçimi -->
+            <Border Padding="10">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10" />
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Döngü Modu" FontSize="Medium" FontAttributes="Bold"/>
+                    <HorizontalStackLayout VerticalOptions="Center" Spacing="10">
+                        <Label Text="Klasik Pomodoro Modu" VerticalOptions="Center"/>
+                        <Switch IsToggled="{Binding IsClassicMode}"
+                                OnColor="{StaticResource Primary}"
+                                ThumbColor="{StaticResource White}" />      
+
+                    </HorizontalStackLayout>
+                    <Label Text="Klasik mod 25dk çalışma, 5dk kısa mola ve 4. çalışma sonrası 15dk uzun mola içerir." FontSize="Small" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Özel Zaman Ayarları -->
+            <Border x:Name="CustomSettingsFrame" Padding="10" IsVisible="{Binding IsCustomMode}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10" />
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Özel Döngü Ayarları" FontSize="Medium" FontAttributes="Bold"/>
+
+                    <!-- Çalışma Süresi -->
+                    <Grid ColumnDefinitions="180,*" ColumnSpacing="10" VerticalOptions="Center">
+                        <Label Text="Çalışma Süresi (dk):" VerticalOptions="Center" Grid.Column="0"/>
+                        <Entry Text="{Binding WorkDuration}" Keyboard="Numeric" Grid.Column="1"/>
+                    </Grid>
+
+                    <!-- Kısa Mola Süresi -->
+                    <Grid ColumnDefinitions="180,*" ColumnSpacing="10" VerticalOptions="Center">
+                        <Label Text="Kısa Mola Süresi (dk):" VerticalOptions="Center" Grid.Column="0"/>
+                        <Entry Text="{Binding ShortBreakDuration}" Keyboard="Numeric" Grid.Column="1"/>
+                    </Grid>
+
+                    <!-- Uzun Mola Süresi -->
+                    <Grid ColumnDefinitions="180,*" ColumnSpacing="10" VerticalOptions="Center">
+                        <Label Text="Uzun Mola Süresi (dk):" VerticalOptions="Center" Grid.Column="0"/>
+                        <Entry Text="{Binding LongBreakDuration}" Keyboard="Numeric" Grid.Column="1"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

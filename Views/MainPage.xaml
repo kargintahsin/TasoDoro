@@ -2,20 +2,22 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TasoDoro.Views.MainPage"
+             xmlns:viewmodel="clr-namespace:TasoDoro.ViewModels"
+             x:DataType="viewmodel:TimerViewModel"
              BackgroundColor="#1c1c1e">
 
     <Grid RowDefinitions="*, Auto, *" Padding="30">
 
         <VerticalStackLayout Grid.Row="0" VerticalOptions="Center" Spacing="10">
-            <Label Text="POMODORO" 
+            <Label Text="TASODORO" 
                    TextColor="#ff6347"
                    FontSize="32"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"
                    CharacterSpacing="2"/>
-            <Label Text="Focus on your work" 
+            <Label Text="{Binding CurrentStateDisplay}" 
                    TextColor="#9e9e9e"
-                   FontSize="16"
+                   FontSize="18"
                    HorizontalOptions="Center"/>
 
         </VerticalStackLayout>
@@ -30,7 +32,7 @@
                    FontFamily="OpenSansSemibold"/>
 
             <ProgressBar Progress="{Binding ProgressValue}"
-                         ProgressColor="#ff6347"
+                         ProgressColor="{Binding ProgressColor}"
                          ScaleY="4"/>
             <Label FontSize="16"
                    TextColor="#9e9e9e"
@@ -53,7 +55,7 @@
                                HorizontalOptions="Center" 
                                VerticalOptions="End">
 
-            <Button Text="BAŞLAT"
+            <Button Text="OYNAT"
                     Command="{Binding StartCommand}"
                     BackgroundColor="Green"
                     TextColor="White"
@@ -69,7 +71,7 @@
                 </Button.Triggers>
             </Button>
 
-            <Button Text="DURDUR"
+            <Button Text="DURAKLAT"
                     Command="{Binding StopCommand}"
                     BackgroundColor="Red"
                     TextColor="White"

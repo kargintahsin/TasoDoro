@@ -11,6 +11,8 @@ namespace TasoDoro
 
             builder.Services.AddSingleton<TimerViewModel>();
             builder.Services.AddSingleton<MainPage>();
+            builder.Services.AddSingleton<SettingsViewModel>();
+            builder.Services.AddTransient<SettingsPage>();
 
             builder.UseMauiApp<App>().ConfigureFonts(fonts =>
                 {
