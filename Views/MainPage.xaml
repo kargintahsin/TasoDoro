@@ -3,57 +3,75 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TasoDoro.Views.MainPage"
              xmlns:viewmodel="clr-namespace:TasoDoro.ViewModels"
+             xmlns:controls="clr-namespace:TasoDoro.Controls"
              x:DataType="viewmodel:TimerViewModel"
              BackgroundColor="#1c1c1e">
 
-    <Grid RowDefinitions="*, Auto, *" Padding="30">
+    <Grid RowDefinitions="Auto, *, Auto" Padding="30">
 
-        <VerticalStackLayout Grid.Row="0" VerticalOptions="Center" Spacing="10">
+        <!-- Header -->
+        <VerticalStackLayout Grid.Row="0" VerticalOptions="Start" Spacing="10" Margin="0,20,0,0">
             <Label Text="TASODORO" 
                    TextColor="#ff6347"
                    FontSize="32"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"
                    CharacterSpacing="2"/>
-            <Label Text="{Binding CurrentStateDisplay}" 
-                   TextColor="#9e9e9e"
-                   FontSize="18"
-                   HorizontalOptions="Center"/>
-
         </VerticalStackLayout>
 
-        <VerticalStackLayout Grid.Row="1" Spacing="20" VerticalOptions="Center">
+        <!-- Timer Circle area -->
+        <Grid Grid.Row="1" HorizontalOptions="Center" VerticalOptions="Center">
+            
+            <!-- Circular Progress Bar -->
+            <controls:CircularProgressBar 
+                Progress="{Binding ProgressValue}"
+                ProgressColor="{Binding ProgressColor}"
+                TrackColor="#2c2c2e"
+                StrokeThickness="15"
+                HeightRequest="350"
+                WidthRequest="350"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"/>
 
-            <Label Text="{Binding TimeDisplay}"
-                   FontSize="100"
-                   TextColor="White"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center"
-                   FontFamily="OpenSansSemibold"/>
+            <!-- Text Content Inside Circle -->
+            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10">
+                
+                <!-- Status (e.g. Çalışma) -->
+                <Label Text="{Binding CurrentStateDisplay}" 
+                       TextColor="#9e9e9e"
+                       FontSize="20"
+                       HorizontalOptions="Center"/>
 
-            <ProgressBar Progress="{Binding ProgressValue}"
-                         ProgressColor="{Binding ProgressColor}"
-                         ScaleY="4"/>
-            <Label FontSize="16"
-                   TextColor="#9e9e9e"
-                   HorizontalOptions="Center"
-                   Margin="0, 10, 0, 0">
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="Tamamlanan Döngü: "/>
-                        <Span Text="{Binding PomodoroCount}" 
-                              FontAttributes="Bold" 
-                              TextColor="White"/>
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
+                <!-- Timer -->
+                <Label Text="{Binding TimeDisplay}"
+                       FontSize="60"
+                       TextColor="White"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       FontFamily="OpenSansSemibold"/>
 
-        </VerticalStackLayout>
+                <!-- Cycle Count -->
+                <Label FontSize="14"
+                       TextColor="#9e9e9e"
+                       HorizontalOptions="Center">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="Tamamlanan: "/>
+                            <Span Text="{Binding PomodoroCount}" 
+                                  FontAttributes="Bold" 
+                                  TextColor="White"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </VerticalStackLayout>
+        </Grid>
 
+        <!-- Buttons -->
         <HorizontalStackLayout Grid.Row="2" 
                                Spacing="20" 
                                HorizontalOptions="Center" 
-                               VerticalOptions="End">
+                               VerticalOptions="End"
+                               Margin="0,0,0,30">
 
             <Button Text="OYNAT"
                     Command="{Binding StartCommand}"
