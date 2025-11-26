@@ -4,18 +4,24 @@ namespace TasoDoro.Controls
 {
     public class CircularProgressBar : GraphicsView, IDrawable
     {
+        // BindableProperty tanımları (XAML Binding için zorunludur)
         public static readonly BindableProperty ProgressProperty =
             BindableProperty.Create(nameof(Progress), typeof(double), typeof(CircularProgressBar), 0.0,
+                propertyChanged: (b, o, n) => ((CircularProgressBar)b).Invalidate());
 
         public static readonly BindableProperty ProgressColorProperty =
-            BindableProperty.Create(nameof(ProgressColor), typeof(Color), typeof(CircularProgressBar), Colors.Red, propertyChanged: Invalidate);
+            BindableProperty.Create(nameof(ProgressColor), typeof(Color), typeof(CircularProgressBar), Colors.Red,
+                propertyChanged: (b, o, n) => ((CircularProgressBar)b).Invalidate());
 
         public static readonly BindableProperty TrackColorProperty =
-            BindableProperty.Create(nameof(TrackColor), typeof(Color), typeof(CircularProgressBar), Color.FromArgb("#333333"), propertyChanged: Invalidate);
+            BindableProperty.Create(nameof(TrackColor), typeof(Color), typeof(CircularProgressBar), Color.FromArgb("#333333"),
+                propertyChanged: (b, o, n) => ((CircularProgressBar)b).Invalidate());
 
         public static readonly BindableProperty StrokeThicknessProperty =
-            BindableProperty.Create(nameof(StrokeThickness), typeof(float), typeof(CircularProgressBar), 10f, propertyChanged: Invalidate);
+            BindableProperty.Create(nameof(StrokeThickness), typeof(float), typeof(CircularProgressBar), 10f,
+                propertyChanged: (b, o, n) => ((CircularProgressBar)b).Invalidate());
 
+        // Property Wrapper'ları
         public double Progress
         {
             get => (double)GetValue(ProgressProperty);
@@ -46,22 +52,17 @@ namespace TasoDoro.Controls
             BackgroundColor = Colors.Transparent;
         }
 
-        private static void Invalidate(BindableObject bindable, object oldValue, object newValue)
-        {
-            ((CircularProgressBar)bindable).Invalidate();
-        }
-
         public void Draw(ICanvas canvas, RectF dirtyRect)
         {
             canvas.SaveState();
 
-            // Calculate dimensions
+            // Boyut ve Merkez Hesaplamaları
             float size = Math.Min(dirtyRect.Width, dirtyRect.Height);
             float halfSize = size / 2;
             float x = dirtyRect.Center.X - halfSize;
             float y = dirtyRect.Center.Y - halfSize;
 
-            // Adjust for stroke thickness so it doesn't get clipped
+            // Kalınlık Ayarı
             float thickness = StrokeThickness;
             float padding = thickness / 2;
             
@@ -69,26 +70,29 @@ namespace TasoDoro.Controls
             float drawY = y + padding;
             float drawSize = size - thickness;
 
-            // Rotate -90 degrees so 0 is at Top (12 o'clock)
+            // Canvas'ı -90 derece döndür (0 noktası Tepe/12 yönü olur)
             canvas.Rotate(-90, dirtyRect.Center.X, dirtyRect.Center.Y);
 
-            // Draw Track (Background Circle)
+            // Arka Plan Çemberi
             canvas.StrokeColor = TrackColor;
             canvas.StrokeSize = thickness;
             canvas.DrawEllipse(drawX, drawY, drawSize, drawSize);
 
-            // Draw Progress (Arc)
+            // İlerleme Yayı
             if (Progress > 0)
             {
                 canvas.StrokeColor = ProgressColor;
                 canvas.StrokeSize = thickness;
                 canvas.StrokeLineCap = LineCap.Round;
 
+                // Dolu Başla -> Azalarak Git (Saat Yönünde Azalma)
+                // Başlangıç Açısı: 360 * (1 - Progress) -> Boşluk arttıkça başlangıç noktası ilerler
+                // Bitiş Açısı: 360 (Sabit)
                 
-                float startAngle = (float)(360 * (Progress-1));
+                float startAngle = (float)(360 * (Progress - 1));
                 float endAngle = -360;
 
-                // Optimization: If full, draw full circle (sometimes Arc has artifacts at closure)
+                // Tam doluysa elips çiz (çizim hatası olmaması için)
                 if (Progress == 1)
                 {
                      canvas.DrawEllipse(drawX, drawY, drawSize, drawSize);

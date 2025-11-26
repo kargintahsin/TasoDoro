@@ -25,7 +25,8 @@ namespace TasoDoro.ViewModels
 
         // Mevcut periyodun toplam ve kalan süresi
         private int _totalSecondsInCurrentPeriod;
-        private int _remainingSeconds;
+        private double _remainingSeconds; // Hassas hesaplama için double yapıldı
+        private DateTime _endTime; // Bitiş zamanını tutar
 
         // Kaçıncı çalışma seansında olduğumuzu sayar (uzun mola için)
         private int _workSessionCount = 0;
@@ -62,19 +63,24 @@ namespace TasoDoro.ViewModels
             LoadSettingsAndReset();
 
             _timer = Application.Current.Dispatcher.CreateTimer();
-            _timer.Interval = TimeSpan.FromSeconds(1);
+            // Akıcı animasyon için timer aralığını düşürdük (örneğin 33ms ~ 30 FPS)
+            _timer.Interval = TimeSpan.FromMilliseconds(10);
             _timer.Tick += Timer_Tick;
         }
 
         private void Timer_Tick(object? sender, EventArgs e)
         {
-            if (_remainingSeconds > 0)
+            var remaining = _endTime - DateTime.Now;
+            
+            if (remaining.TotalSeconds > 0)
             {
-                _remainingSeconds--;
+                _remainingSeconds = remaining.TotalSeconds;
                 UpdateDisplay();
             }
             else
             {
+                _remainingSeconds = 0;
+                UpdateDisplay();
                 TransitionToNextState();
             }
         }
@@ -111,6 +117,9 @@ namespace TasoDoro.ViewModels
                 SetupPeriod(PomodoroState.Working);
             }
 
+            // Bitiş zamanını şimdiki zamana kalan saniyeyi ekleyerek hesapla
+            _endTime = DateTime.Now.AddSeconds(_remainingSeconds);
+
             _timer.Start();
             IsRunning = true;
         }
@@ -122,6 +131,12 @@ namespace TasoDoro.ViewModels
 
             _timer.Stop();
             IsRunning = false;
+            
+            // Durduğumuz anı kaydetmek için remainingSeconds'ı güncelle
+            // (Tekrar başladığında bu değer üzerinden yeni _endTime hesaplanacak)
+            var diff = _endTime - DateTime.Now;
+            _remainingSeconds = diff.TotalSeconds > 0 ? diff.TotalSeconds : 0;
+            UpdateDisplay();
         }
 
         [RelayCommand]
@@ -183,12 +198,15 @@ namespace TasoDoro.ViewModels
 
         private void UpdateDisplay()
         {
-            TimeSpan time = TimeSpan.FromSeconds(_remainingSeconds);
+            // Ekranda saniye atlamaması için Ceiling (yukarı yuvarlama) kullanıyoruz.
+            // Böylece 0.9 saniye kaldığında hala 00:01 görünür, 0 olunca 00:00 olur.
+            TimeSpan time = TimeSpan.FromSeconds(Math.Ceiling(_remainingSeconds));
             TimeDisplay = time.ToString(@"mm\:ss");
 
             if (_totalSecondsInCurrentPeriod > 0)
             {
-                ProgressValue = (double)_remainingSeconds / _totalSecondsInCurrentPeriod;
+                // Hassas double değerini kullanarak smooth progress sağlıyoruz
+                ProgressValue = _remainingSeconds / _totalSecondsInCurrentPeriod;
             }
             else
             {
