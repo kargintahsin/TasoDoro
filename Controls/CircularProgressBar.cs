@@ -5,7 +5,7 @@ namespace TasoDoro.Controls
     public class CircularProgressBar : GraphicsView, IDrawable
     {
         public static readonly BindableProperty ProgressProperty =
-            BindableProperty.Create(nameof(Progress), typeof(double), typeof(CircularProgressBar), 0.0, propertyChanged: Invalidate);
+            BindableProperty.Create(nameof(Progress), typeof(double), typeof(CircularProgressBar), 0.0,
 
         public static readonly BindableProperty ProgressColorProperty =
             BindableProperty.Create(nameof(ProgressColor), typeof(Color), typeof(CircularProgressBar), Colors.Red, propertyChanged: Invalidate);
